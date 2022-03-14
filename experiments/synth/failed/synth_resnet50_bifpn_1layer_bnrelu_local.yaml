@@ -1,0 +1,65 @@
+import:
+    - 'experiments/synth/base_synth_local.yaml'
+package: []
+define:
+  - name: 'Experiment'
+    class: Experiment
+    structure: 
+        class: Structure
+        builder: 
+            class: Builder
+            model: SegDetectorModel
+            model_args:
+                backbone: resnet50
+                decoder: BiFPN_1layer_bnrelu
+                decoder_args: 
+                    adaptive: True
+                    in_channels: [256, 512, 1024, 2048]
+                    k: 50
+                loss_class: L1BalanceCELoss
+                dataset: synthtext
+
+        representer:
+            class: SegDetectorRepresenter
+            max_candidates: 1000
+        measurer:  
+            class: QuadMeasurer
+        visualizer:  
+            class: SegDetectorVisualizer
+    train: 
+        class: TrainSettings
+        data_loader: 
+            class: DataLoader
+            dataset: ^train_data
+            batch_size: 4
+            num_workers: 8
+        checkpoint: 
+            class: Checkpoint
+            start_epoch: 0
+            start_iter: 0
+            resume: null
+        model_saver: 
+            class: ModelSaver
+            dir_path: model
+            save_interval: 20000
+            signal_path: save
+        scheduler: 
+            class: OptimizerScheduler
+            optimizer: "SGD"
+            optimizer_args:
+                lr: 0.007
+                momentum: 0.9
+                weight_decay: 0.0001
+            learning_rate:  
+                class: ExpDecayLearningRate
+                lr : 0.007
+                decay_step : 1600
+                min_lr : 0.00001
+                factor : 0.9
+        epochs: 2
+
+    logger:
+        class: Logger
+        verbose: true
+        level: info
+        log_interval: 100

@@ -1,0 +1,17 @@
+pyyaml 
+tqdm 
+opencv-python
+anyconfig 
+munch 
+scipy 
+sortedcontainers 
+shapely 
+pyclipper 
+gevent 
+gevent-websocket 
+flask 
+editdistance 
+scikit-image 
+imgaug
+prettytable
+tensorboard
